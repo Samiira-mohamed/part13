@@ -1,14 +1,19 @@
 const Sequelize = require('sequelize')
-const { DATABASE_URL } = require('./config')
+const { DATABASE_URL, TEST_DATABASE_URL, TESTING } = require('./config')
 
-const sequelize = new Sequelize(DATABASE_URL, {
+const databaseUrl = TESTING ? TEST_DATABASE_URL : DATABASE_URL
+const useSsl = !databaseUrl.includes('sslmode=disable')
+
+const sequelize = new Sequelize(databaseUrl, {
   dialect: 'postgres',
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  }
+  dialectOptions: useSsl
+    ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false
+        }
+      }
+    : {}
 })
 
 const connectToDatabase = async () => {
