@@ -3,7 +3,6 @@ const app = express()
 
 const { PORT, TESTING } = require('./util/config')
 const { connectToDatabase } = require('./util/db')
-const { syncModels } = require('./models')
 const { errorHandler } = require('./util/middleware')
 
 const blogsRouter = require('./controllers/blogs')
@@ -31,7 +30,6 @@ app.use(errorHandler)
 
 const start = async () => {
   await connectToDatabase()
-  await syncModels()
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
   })
